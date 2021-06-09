@@ -1,3 +1,4 @@
+
 package com.vmware.vcloud.api.rest.client;
 
 /*-
@@ -29,34 +30,38 @@ package com.vmware.vcloud.api.rest.client;
  * #L%
  */
 
-import com.vmware.vcloud.api.rest.links.LinkRelation;
-
 /**
- * Base class for exceptions related to operations on &lt;link&gt; elements in responses.
+ *
+ * Enum with supported Multisite Signature version.
+ *
  */
-public abstract class LinkException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
-    private final String href;
-    private final LinkRelation rel;
-    private final String mediaType;
+public enum MultisiteSignatureVersion {
+    VERSION_1_0("1.0"),
+    VERSION_2_0("2.0"),
 
-    protected LinkException(String href, LinkRelation rel, String mediaType) {
-        this.href = href;
-        this.rel = rel;
-        this.mediaType = mediaType;
+    /** Larger than all versions. Keep last! */
+    VERSION_MAX("");
+
+    private String version;
+
+    MultisiteSignatureVersion(final String version) {
+        this.version = version;
     }
 
-    public LinkRelation getRel() {
-        return rel;
+    /**
+     * @return the version as string
+     */
+    public String value() {
+        return version;
     }
 
-    public String getMediaType() {
-        return mediaType;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s; href: %s, rel: %s, mediaType: %s", super.toString(), href, rel, mediaType);
+    public static MultisiteSignatureVersion fromValue(final String value) {
+        for (final MultisiteSignatureVersion v : MultisiteSignatureVersion.values()) {
+            if (v.value().equals(value)) {
+                return v;
+            }
+        }
+        return null;
     }
 }
 

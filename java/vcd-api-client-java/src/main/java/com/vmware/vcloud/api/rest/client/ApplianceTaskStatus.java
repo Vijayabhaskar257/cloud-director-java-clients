@@ -1,3 +1,4 @@
+
 package com.vmware.vcloud.api.rest.client;
 
 /*-
@@ -29,34 +30,56 @@ package com.vmware.vcloud.api.rest.client;
  * #L%
  */
 
-import com.vmware.vcloud.api.rest.links.LinkRelation;
-
 /**
- * Base class for exceptions related to operations on &lt;link&gt; elements in responses.
+ * The status of a task.
+ *
+ * Note: This Enum matches the TaskStatus enum specified in asynclib.py of the vcd_ova_ui
+ * 		service in the vcd appliance.
  */
-public abstract class LinkException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
-    private final String href;
-    private final LinkRelation rel;
-    private final String mediaType;
 
-    protected LinkException(String href, LinkRelation rel, String mediaType) {
-        this.href = href;
-        this.rel = rel;
-        this.mediaType = mediaType;
+public enum ApplianceTaskStatus {
+    /**
+     * The new task has been queued for execution.
+     */
+    NEW("new"),
+
+    /**
+     * The task is stopped.
+     */
+    STOPPED("stopped"),
+
+    /**
+     * The task is running.
+     */
+    RUNNING("running"),
+
+    /**
+     * The task failed.
+     */
+    FAILED("failed");
+
+    public static final ApplianceTaskStatus[] TERMINAL_STATUSES = new ApplianceTaskStatus[] { STOPPED, FAILED };
+
+    private final String label;
+
+    ApplianceTaskStatus(String label) {
+        this.label = label;
     }
 
-    public LinkRelation getRel() {
-        return rel;
+    /**
+     * Getter for {@link ApplianceTaskStatus#label}
+     */
+    public String getLabel() {
+        return label;
     }
 
-    public String getMediaType() {
-        return mediaType;
-    }
-
+    /**
+     * @see java.lang.Enum#toString()
+     */
     @Override
     public String toString() {
-        return String.format("%s; href: %s, rel: %s, mediaType: %s", super.toString(), href, rel, mediaType);
+        return getLabel();
     }
 }
+
 
