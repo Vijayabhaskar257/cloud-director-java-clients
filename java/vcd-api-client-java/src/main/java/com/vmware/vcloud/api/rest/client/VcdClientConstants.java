@@ -29,34 +29,11 @@ package com.vmware.vcloud.api.rest.client;
  * #L%
  */
 
-import com.vmware.vcloud.api.rest.links.LinkRelation;
+public class VcdClientConstants {
 
-/**
- * Base class for exceptions related to operations on &lt;link&gt; elements in responses.
- */
-public abstract class LinkException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
-    private final String href;
-    private final LinkRelation rel;
-    private final String mediaType;
-
-    protected LinkException(String href, LinkRelation rel, String mediaType) {
-        this.href = href;
-        this.rel = rel;
-        this.mediaType = mediaType;
-    }
-
-    public LinkRelation getRel() {
-        return rel;
-    }
-
-    public String getMediaType() {
-        return mediaType;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s; href: %s, rel: %s, mediaType: %s", super.toString(), href, rel, mediaType);
-    }
+    /**
+     * To request an unlimited page size in various APIs where the response is paginated.
+     */
+    public static final Integer INFINITE_PAGE_SIZE = 0;
 }
 

@@ -1,3 +1,4 @@
+
 package com.vmware.vcloud.api.rest.client;
 
 /*-
@@ -29,34 +30,55 @@ package com.vmware.vcloud.api.rest.client;
  * #L%
  */
 
-import com.vmware.vcloud.api.rest.links.LinkRelation;
+import org.apache.cxf.common.util.Base64Utility;
 
 /**
- * Base class for exceptions related to operations on &lt;link&gt; elements in responses.
+ * Username/password Credentials suitable for use in authenticating with a vCD Appliance using the
+ * Appliance API
  */
-public abstract class LinkException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
-    private final String href;
-    private final LinkRelation rel;
-    private final String mediaType;
+public class ApplianceBasicLoginCredentials implements ClientCredentials {
 
-    protected LinkException(String href, LinkRelation rel, String mediaType) {
-        this.href = href;
-        this.rel = rel;
-        this.mediaType = mediaType;
+    private final String authorizationHeader;
+
+
+    /**
+     * Construct credentials from a valid vCD appliance username and a password.
+     */
+    public ApplianceBasicLoginCredentials(String userName, String password) {
+        this(userName + ":" + password);
     }
 
-    public LinkRelation getRel() {
-        return rel;
-    }
-
-    public String getMediaType() {
-        return mediaType;
+    private ApplianceBasicLoginCredentials(String userString) {
+        authorizationHeader = "Basic " + Base64Utility.encode(userString.getBytes());
     }
 
     @Override
-    public String toString() {
-        return String.format("%s; href: %s, rel: %s, mediaType: %s", super.toString(), href, rel, mediaType);
+    public boolean equals(Object obj) {
+        return authorizationHeader.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return authorizationHeader.hashCode();
+    }
+
+    @Override
+    public String getHeaderValue() {
+        return authorizationHeader;
+    }
+
+    @Override
+    public String getHeaderName() {
+        return "Authorization";
+    }
+
+    @Override
+    public boolean supportsSessionless() {
+        return true;
+    }
+
+    @Override
+    public boolean isProvider() {
+        return false;
     }
 }
-

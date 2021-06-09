@@ -1,3 +1,4 @@
+
 package com.vmware.vcloud.api.rest.client;
 
 /*-
@@ -29,34 +30,46 @@ package com.vmware.vcloud.api.rest.client;
  * #L%
  */
 
-import com.vmware.vcloud.api.rest.links.LinkRelation;
+import java.text.MessageFormat;
 
 /**
- * Base class for exceptions related to operations on &lt;link&gt; elements in responses.
+ * Bearer Token credentials suitable for use in authenticating with a vCD Appliance using the Cloud
+ * Director Appliance API.
+ *
  */
-public abstract class LinkException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
-    private final String href;
-    private final LinkRelation rel;
-    private final String mediaType;
+public final class ApplianceBearerLoginCredentials implements ClientCredentials {
 
-    protected LinkException(String href, LinkRelation rel, String mediaType) {
-        this.href = href;
-        this.rel = rel;
-        this.mediaType = mediaType;
-    }
+    private final String bearerAuthenticationHeader;
 
-    public LinkRelation getRel() {
-        return rel;
-    }
-
-    public String getMediaType() {
-        return mediaType;
+    /**
+     * Construct a {@link ApplianceBearerLoginCredentials} object using an OAuth Bearer token
+     *
+     * @param oAuthBearerToken
+     *            Bearer Token supplied by the vcd appliance via the /sessions endpoint
+     */
+    public ApplianceBearerLoginCredentials(final String oAuthBearerToken) {
+        bearerAuthenticationHeader =
+                MessageFormat.format("Bearer {0}", oAuthBearerToken);
     }
 
     @Override
-    public String toString() {
-        return String.format("%s; href: %s, rel: %s, mediaType: %s", super.toString(), href, rel, mediaType);
+    public String getHeaderValue() {
+        return bearerAuthenticationHeader;
+    }
+
+    @Override
+    public String getHeaderName() {
+        return "Authorization";
+    }
+
+    @Override
+    public boolean supportsSessionless() {
+        return true;
+    }
+
+    @Override
+    public boolean isProvider() {
+        return false;
     }
 }
 
